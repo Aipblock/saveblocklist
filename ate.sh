@@ -79,21 +79,7 @@ http {
 }">/usr/local/nginx/conf/nginx.conf
 	cd /lib/systemd/system/
 	rm nginx.service
-	echo"[Unit]
-Description=The nginx HTTP and reverse proxy server
-After=syslog.target network.target remote-fs.target nss-lookup.target
- 
-[Service]
-Type=forking
-PIDFile=/usr/local/nginx/logs/nginx.pid
-ExecStartPre=/usr/local/nginx/sbin/nginx -t
-ExecStart=/usr/local/nginx/sbin/nginx
-ExecReload=/usr/local/nginx/sbin/nginx -s reload
-ExecStop=/usr/local/nginx/sbin/nginx -s stop
-PrivateTmp=true
- 
-[Install]
-WantedBy=multi-user.target">nginx.service
+	wget https://raw.githubusercontent.com/Aipblock/Atengineuse/main/nginx.service
         systemctl daemon-reload
         systemctl enable nginx
          systemctl stop nginx
@@ -102,54 +88,6 @@ WantedBy=multi-user.target">nginx.service
 function get_conf() {
 	mkdir /usr/local/nginx/mytcp
 	mkdir /usr/local/nginx/meip
-  echo "
-    upstream web1 {
-    	hash $remote_addr;
-    	server 212.71.244.165:29006 max_fails=3 fail_timeout=30s;
-    }
-    upstream web2 {
-    	hash $remote_addr;
-    	server 212.71.244.265:29006 max_fails=3 fail_timeout=30s;
-    }
-    server {
-        listen              443 ssl;                   
-        server_name uk.spss6.top;
-        ssl_protocols       TLSv1.2 TLSv1.3;      
-
-        ssl_certificate /usr/local/soga/study.crt; 
-        ssl_certificate_key /usr/local/soga/private.key; 
-        ssl_session_cache   shared:SSL:10m;            
-                                                       
-        ssl_session_timeout 10m;
-        proxy_connect_timeout 5s;  # 与被代理服务器建立连接的超时时间为5s
-    	proxy_timeout 20s;   # 获取被代理服务器的响应最大超时时间为20s
-        proxy_next_upstream on;  # 当被代理的服务器返回错误或超时时，将未返回响应的客户端连接请求传递给upstream中的下一个服务器
-        proxy_next_upstream_tries 3;   # 转发尝试请求最多3次
-        proxy_next_upstream_timeout 10s;    # 总尝试超时时间为10s
-        proxy_socket_keepalive on;  # 开启SO_KEEPALIVE选项进行心跳检测
-        proxy_protocol    on;
-        proxy_pass        web1;
-    }
-    server {
-        listen              443 ssl;                   
-        server_name uk2.spss6.top;
-        ssl_protocols       TLSv1.2 TLSv1.3;      
-
-        ssl_certificate /usr/local/soga/study.crt; 
-        ssl_certificate_key /usr/local/soga/private.key; 
-        ssl_session_cache   shared:SSL:10m;            
-                                                       
-        ssl_session_timeout 10m;
-        proxy_connect_timeout 5s;  # 与被代理服务器建立连接的超时时间为5s
-    	proxy_timeout 20s;   # 获取被代理服务器的响应最大超时时间为20s
-        proxy_next_upstream on;  # 当被代理的服务器返回错误或超时时，将未返回响应的客户端连接请求传递给upstream中的下一个服务器
-        proxy_next_upstream_tries 3;   # 转发尝试请求最多3次
-        proxy_next_upstream_timeout 10s;    # 总尝试超时时间为10s
-        proxy_socket_keepalive on;  # 开启SO_KEEPALIVE选项进行心跳检测
-        proxy_protocol    on;
-        proxy_pass        web2;
-    }
-">/usr/local/nginx/mytcp/a.conf
 }
 function reip_conf() {
 myip=$(curl ip.qaros.com | awk 'NR==1')

@@ -79,7 +79,7 @@ http {
 }">/usr/local/nginx/conf/nginx.conf
 	cd /lib/systemd/system/
 	rm nginx.service
-	wget https://raw.githubusercontent.com/Aipblock/Atengineuse/main/nginx.service
+	wget https://raw.githubusercontent.com/Aipblock/saveblocklist/main/nginx.service
         systemctl daemon-reload
         systemctl enable nginx
          systemctl stop nginx
